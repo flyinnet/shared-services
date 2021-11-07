@@ -12,9 +12,9 @@ services:
     restart: always
     container_name: nginx_1
     volumes:
-      - "/home/test/gitlab/run_official_documentation/containers/nginx/nginx-conf/nginx.conf:/etc/nginx/nginx.conf:ro"
-      - "/home/test/gitlab/run_official_documentation/containers/nginx/nginx-conf/gitlab-http.conf:/etc/nginx/conf.d/gitlab-http.conf:ro"
-      - "/home/test/gitlab/run_official_documentation/containers/nginx/nginx-logs:/var/log/nginx"
+      - "${HOME}/gitlab/containers/nginx/nginx-conf/nginx.conf:/etc/nginx/nginx.conf:ro"
+      - "${HOME}/gitlab/containers/nginx/nginx-conf/gitlab-http.conf:/etc/nginx/conf.d/gitlab-http.conf:ro"
+      - "${HOME}/gitlab/containers/nginx/nginx-logs:/var/log/nginx"
     ports:
       - '81:80'
     depends_on:
@@ -42,9 +42,9 @@ services:
       - '443:443'
       - '2222:22'
     volumes:
-      - '/home/test/gitlab/run_official_documentation/containers/gitlab/gitlab_config:/etc/gitlab'
-      - '/home/test/gitlab/run_official_documentation/containers/gitlab/gitlab_logs/logs:/var/log/gitlab'
-      - '/home/test/gitlab/run_official_documentation/containers/gitlab/gitlab_data/data:/var/opt/gitlab'
+      - "${HOME}/gitlab/containers/gitlab/gitlab_config:/etc/gitlab"
+      - "${HOME}/gitlab/containers/gitlab/gitlab_logs/logs:/var/log/gitlab"
+      - "${HOME}/gitlab/containers/gitlab/gitlab_data/data:/var/opt/gitlab"
     depends_on:
       - postgresql_1
       - redis_1
@@ -65,7 +65,7 @@ services:
     ports:
       - '5433:5432'
     volumes:
-      - '/home/test/gitlab/run_official_documentation/containers/postgresql/postgresql-data:/var/lib/postgresql/data'
+      - "${HOME}/gitlab/containers/postgresql/postgresql-data:/var/lib/postgresql/data"
     networks:
       test_gitlab:
         aliases:
@@ -78,7 +78,7 @@ services:
     ports:
       - "6379:6379"
     volumes:
-     - "/home/test/gitlab/run_official_documentation/containers/redis/redis-data:/data"
+     - "${HOME}/gitlab/containers/redis/redis-data:/data"
     networks:
       test_gitlab:
         aliases:
