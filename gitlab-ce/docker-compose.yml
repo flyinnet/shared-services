@@ -12,19 +12,15 @@ services:
     restart: always
     container_name: nginx_1
     volumes:
-      - "${HOME}/gitlab/containers/nginx/nginx-conf/nginx.conf:/etc/nginx/nginx.conf:ro"
-      - "${HOME}/gitlab/containers/nginx/nginx-conf/gitlab-http.conf:/etc/nginx/conf.d/gitlab-http.conf:ro"
-      - "${HOME}/gitlab/containers/nginx/nginx-logs:/var/log/nginx"
+      - "./containers/nginx/nginx-conf/nginx.conf:/etc/nginx/nginx.conf:ro"
+      - "./containers/nginx/nginx-conf/gitlab-http.conf:/etc/nginx/conf.d/gitlab-http.conf:ro"
+      - "./containers/nginx/nginx-logs:/var/log/nginx"
     ports:
       - '81:80'
     depends_on:
       - gitlab_app_1
-    links:
-      - gitlab_app_1
     networks:
-      test_gitlab:
-        aliases:
-          - test-gitlab-network
+      - test_gitlab
 
   gitlab_app_1:
     image: 'gitlab/gitlab-ce:latest'
@@ -37,39 +33,28 @@ services:
         # Add any other gitlab.rb configuration here, each on its own line
     expose:
       - "80"
-    ports:
-      - '80:80'
-      - '443:443'
-      - '2222:22'
     volumes:
-      - "${HOME}/gitlab/containers/gitlab/gitlab_config:/etc/gitlab"
-      - "${HOME}/gitlab/containers/gitlab/gitlab_logs/logs:/var/log/gitlab"
-      - "${HOME}/gitlab/containers/gitlab/gitlab_data/data:/var/opt/gitlab"
+      - './containers/gitlab/gitlab_config:/etc/gitlab'
+      - './containers/gitlab/gitlab_logs/logs:/var/log/gitlab'
+      - './containers/gitlab/gitlab_data/data:/var/opt/gitlab'
     depends_on:
       - postgresql_1
       - redis_1
-    links:
-      - postgresql_1
-      - redis_1
     networks:
-      test_gitlab:
-        aliases:
-          - test-gitlab-network
+      - test_gitlab
 
   postgresql_1:
     image: postgres:latest
     restart: always
     container_name: postgresql_1
     environment:
-      - POSTGRES_PASSWORD=Your_db-password
+      - POSTGRES_PASSWORD=<Your_password>
     ports:
       - '5433:5432'
     volumes:
-      - "${HOME}/gitlab/containers/postgresql/postgresql-data:/var/lib/postgresql/data"
+      - './containers/postgresql/postgresql-data:/var/lib/postgresql/data'
     networks:
-      test_gitlab:
-        aliases:
-          - test-gitlab-network
+      - test_gitlab
 
   redis_1:
     restart: always
@@ -78,8 +63,6 @@ services:
     ports:
       - "6379:6379"
     volumes:
-     - "${HOME}/gitlab/containers/redis/redis-data:/data"
+      - "./containers/redis/redis-data:/data"
     networks:
-      test_gitlab:
-        aliases:
-          - test-gitlab-networkt
+      - test_gitlab
